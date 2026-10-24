@@ -36,8 +36,8 @@ class ObraForm(forms.ModelForm):
         model = Obra
         fields = ['titulo', 'capa']
         widgets = {
-            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
-            'capa': forms.FileInput(attrs={'class': 'form-control'}),
+            'titulo': forms.TextInput(attrs={'class': 'input-nb w-full'}),
+            'capa': forms.FileInput(attrs={'class': 'input-nb w-full'}),
         }
 
 class SolicitacaoObraForm(forms.ModelForm):

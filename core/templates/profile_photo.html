@@ -27,7 +27,7 @@
                                 <div class="relative">
                                     <img 
                                         id="previewImage" 
-                                        src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}" 
+                                        src="{% if profile.photo %}{{ profile.photo.url }}{% else %}{% static 'img/default-avatar.png' %}{% endif %}"
                                         alt="Foto Atual" 
                                         class="w-40 h-40 object-cover border-black border-4 shadow-nb transition-all group-hover:opacity-75"
                                     >

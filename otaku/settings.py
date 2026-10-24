@@ -12,18 +12,24 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IS_VERCEL = os.environ.get('VERCEL') == '1'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)1wtabj4fclm1*h4%4*%96fmw%@^(l36du*fs5_sx$9@1cq*ap'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    if IS_VERCEL:
+        raise ImproperlyConfigured('Configure SECRET_KEY in the Vercel environment.')
+    SECRET_KEY = 'django-insecure-local-development-only'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', '').strip().lower() in {'1', 'true', 'yes'}
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -56,6 +62,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    'otaku.middleware.ReadOnlyDeploymentMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -89,12 +96,52 @@ WSGI_APPLICATION = 'otaku.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    DATABASES = {
+        'default': dj_database_url.parse(database_url, conn_max_age=0),
     }
-}
+    if IS_VERCEL:
+        DATABASES['default'].setdefault('OPTIONS', {})['sslmode'] = 'require'
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+media_bucket = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+media_access_key = os.environ.get('AWS_ACCESS_KEY_ID')
+media_secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+media_storage_configured = bool(media_bucket and media_access_key and media_secret_key)
+database_is_persistent = (
+    DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
+)
+media_storage_enabled = media_storage_configured and (
+    not IS_VERCEL or database_is_persistent
+)
+READ_ONLY_MODE = IS_VERCEL and not (database_is_persistent and media_storage_enabled)
+
+if media_storage_enabled:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+            'OPTIONS': {
+                'bucket_name': media_bucket,
+                'access_key': media_access_key,
+                'secret_key': media_secret_key,
+                'endpoint_url': os.environ.get('AWS_S3_ENDPOINT_URL') or None,
+                'region_name': os.environ.get('AWS_S3_REGION_NAME') or None,
+                'addressing_style': os.environ.get('AWS_S3_ADDRESSING_STYLE') or None,
+                'signature_version': 's3v4',
+                'file_overwrite': False,
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        },
+    }
 
 
 # Password validation
@@ -138,6 +185,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
+if IS_VERCEL and not media_storage_enabled:
+    STATICFILES_DIRS.append(('media', BASE_DIR / 'media'))
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -146,5 +196,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'inicio' 
 LOGOUT_REDIRECT_URL = 'login'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = (
+    '/static/media/'
+    if IS_VERCEL and not media_storage_enabled
+    else '/media/'
+)
+MEDIA_ROOT = BASE_DIR / 'media'

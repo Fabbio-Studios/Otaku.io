@@ -1,5 +1,95 @@
 # Otaku.io
 
+## Executar com Docker
+
+Docker padroniza o ambiente local, mas não fornece armazenamento persistente para
+as funções da Vercel. Para desenvolver com PostgreSQL no Windows PowerShell:
+
+1. Copie o arquivo de ambiente: `Copy-Item .env.example .env`.
+2. Execute `docker compose up --build`.
+3. Acesse `http://localhost:8000`.
+
+O Compose inicia o Django e o PostgreSQL, aplica as migrações e mantém os dados
+do banco no volume `postgres-data`. Os arquivos enviados ficam na pasta local
+`media/`. Crie um usuário administrador com
+`docker compose exec web python manage.py createsuperuser`.
+
+## Configuração da Vercel
+
+A Vercel executa o Django em funções; o SQLite incluído no repositório não pode
+ser alterado e não serve para persistir mudanças. **Sem serviços externos, o site
+inicia em modo de leitura:** páginas e imagens existentes ficam disponíveis;
+envios e ações que alteram dados retornam HTTP 503 com uma mensagem explicativa,
+em vez de falharem com erro de banco. As imagens já versionadas em `media/` são
+coletadas junto dos estáticos e servidas pela CDN da Vercel.
+
+Para o Django iniciar, cadastre `SECRET_KEY` em **Vercel → Project → Settings →
+Environment Variables**. Gere uma chave nova no PowerShell:
+
+```powershell
+node -e "console.log(require('crypto').randomBytes(50).toString('hex'))"
+```
+
+Cole a saída em uma variável `SECRET_KEY` para o ambiente Production. Não use a
+chave antiga do repositório, não publique o valor e faça um novo deploy. **Isso
+permite navegar no site, mas não reativa cadastros nem gravações.**
+
+Uma chave também foi gerada no `.env` local ignorado pelo Git; você pode copiar
+o valor `SECRET_KEY` desse arquivo diretamente para as variáveis da Vercel.
+
+Para habilitar cadastros, login, opiniões, solicitações e uploads persistentes,
+configure também:
+
+- `SECRET_KEY`: uma chave secreta própria para produção.
+- `DATABASE_URL`: URL do PostgreSQL do Supabase. Use o pooler de transações para
+  as funções da Vercel; não use o SQLite local.
+- `AWS_STORAGE_BUCKET_NAME`, `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY`:
+  nome do bucket e credenciais de uma chave do Cloudflare R2 com permissão de
+  leitura e escrita nesse bucket.
+- `AWS_S3_ENDPOINT_URL`: `https://<ID-DA-CONTA>.r2.cloudflarestorage.com`.
+- `AWS_S3_REGION_NAME`: `auto`.
+- `AWS_S3_ADDRESSING_STYLE`: `path`.
+- `DJANGO_ALLOWED_HOSTS`: domínios adicionais, separados por vírgulas, se
+  necessário.
+
+Depois de configurar essas variáveis na Vercel e aplicar as migrations ao
+Supabase, faça um novo deploy. Sem o banco e o R2, o site permanece em modo de
+leitura; o Docker é opcional e não é necessário para esse deploy. Não envie
+chaves ou URLs com senha para o Git.
+
+### Migrar o SQLite e as imagens existentes
+
+Faça primeiro uma cópia de segurança de `db.sqlite3` e da pasta `media/`. Com
+Docker instalado e o `.env` local criado a partir de `.env.example`, preencha
+localmente a URL do Supabase e as variáveis do R2 no `.env`. No Supabase, use a
+URL direta ou o pooler de sessão para a migração inicial; não use o pooler de
+transações nessa etapa.
+
+Exporte os dados do SQLite para uma fixture:
+
+```powershell
+docker compose run --rm --no-deps `
+  -e DATABASE_URL=sqlite:////app/db.sqlite3 `
+  web sh -c "python manage.py dumpdata --natural-foreign --natural-primary --exclude contenttypes --exclude auth.permission --exclude sessions --indent 2 > /app/backup.json"
+```
+
+Depois aplique as migrations e importe a fixture para o Supabase. No PowerShell,
+defina `$env:DATABASE_URL` com a URL direta/de sessão do Supabase:
+
+```powershell
+$env:DATABASE_URL = "URL direta ou pooler de sessão do Supabase"
+docker compose run --rm --no-deps -e DATABASE_URL web python manage.py migrate
+docker compose run --rm --no-deps -e DATABASE_URL web python manage.py loaddata backup.json
+docker compose run --rm --no-deps web python scripts/migrate_media.py
+Remove-Item Env:DATABASE_URL
+```
+
+O comando de mídia usa as credenciais do R2 no `.env` e preserva os caminhos das
+imagens referenciadas pelo banco. Não apague a fixture, o SQLite ou a pasta
+`media/` antes de verificar usuários, obras, capas e fotos no site publicado.
+O `.env` local é ignorado pelo Git; cadastre as mesmas configurações de produção
+diretamente na Vercel, usando o pooler de transações do Supabase em `DATABASE_URL`.
+
 ## Configuração do ambiente Python
 
 Este projeto usa uma virtual environment Python para isolar dependências.
@@ -64,10 +154,15 @@ O front-end do Otaku.io foi completamente redesenhado com tecnologias modernas, 
 
 #### 📚 Tecnologias implementadas
 
-- **Tailwind CSS**: Framework CSS utilitário para design moderno e responsivo
+- **Tailwind CSS**: Framework CSS utilitário, com componentes próprios inspirados
+  no [neobrutalism.dev](https://www.neobrutalism.dev/)
 - **Alpine.js**: Framework JavaScript leve para interatividade
 - **Font Awesome 6.4**: Ícones modernos
 - **Django Widget Tweaks**: Melhor integração de formulários
+
+O projeto não carrega Bootstrap: a base usa Tailwind CSS e `static/css/custom.css`.
+Os arquivos Bootstrap que ainda existem em `static/` são legados e não são
+referenciados pelas páginas.
 
 #### 🎯 Heurísticas de Nielsen implementadas
 

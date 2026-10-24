@@ -78,7 +78,13 @@ def login_view(request):
 # Upload de foto de perfil
 @login_required
 def upload_profile_picture(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile = Profile.objects.filter(user=request.user).first()
+    if profile is None:
+        profile = Profile(
+            user=request.user,
+            name=request.user.username,
+            email=request.user.email,
+        )
 
     if request.method == 'POST':
         form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
@@ -88,7 +94,7 @@ def upload_profile_picture(request):
     else:
         form = ProfilePictureForm(instance=profile)
 
-    return render(request, 'profile_photo.html', {'form': form})
+    return render(request, 'profile_photo.html', {'form': form, 'profile': profile})
 
 # Exibe o perfil do usuário
 @login_required
@@ -99,7 +105,11 @@ def profile_view(request):
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance, email=instance.email)
+        Profile.objects.create(
+            user=instance,
+            name=instance.username,
+            email=instance.email,
+        )
     else:
         profile = Profile.objects.filter(user=instance).first()
         if profile:
@@ -115,10 +125,7 @@ def profile(request):
 
 # Detalhes da obra
 def detalhes_obra(request, titulo):
-    obra = Obra.objects.filter(titulo=titulo).first()
-
-    if not obra:
-        obra = Obra.objects.create(titulo=titulo, capa=f"{titulo}.jpg")
+    obra = get_object_or_404(Obra, titulo=titulo)
 
     opinioes = Opiniao.objects.filter(obra=obra).order_by('-data_criacao')
 
