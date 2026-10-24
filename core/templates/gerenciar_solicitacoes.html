@@ -1,45 +1,75 @@
 {% extends 'modelo.html' %}
 {% load static %}
 
+{% block titulo %}
+<title>Gerenciar Solicitações - Otaku Estudante</title>
+{% endblock %}
+
 {% block conteudo %}
-<div class="container">
-    <h2 class="text-center">Gerenciar Solicitações</h2>
+    <section class="content-nb container-nb py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-6">
+                <h1 class="text-4xl font-black uppercase mb-1">Gerenciar Solicitações</h1>
+                <p class="text-xl font-bold">Aprove ou rejeite solicitações de obras</p>
+            </div>
 
-    <!-- Botão para limpar as solicitações -->
-    <form action="{% url 'limpar_solicitacoes' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger mb-3">Limpar Solicitações</button>
-    </form>
+            <!-- Botão limpar -->
+            <form action="{% url 'limpar_solicitacoes' %}" method="post" class="mb-6">
+                {% csrf_token %}
+                <button type="submit" class="btn-nb bg-red-200 text-red-900 px-6 py-2 font-black" onclick="return confirm('Tem certeza que deseja limpar TODAS as solicitações? Esta ação não pode ser desfeita.')">
+                    <i class="fas fa-broom mr-2"></i>Limpar Solicitações
+                </button>
+            </form>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for solicitacao in solicitacoes %}
-            <tr>
-                <td>{{ solicitacao.titulo }}</td>
-                <td>
-                    {% if solicitacao.status == "aprovado" %}
-                        <span class="badge bg-success">Aprovado</span>
-                    {% elif solicitacao.status == "rejeitado" %}
-                        <span class="badge bg-danger">Recusado</span>
-                    {% else %}
-                        <span class="badge bg-warning text-dark">Pendente</span>
-                    {% endif %}
-                </td>
-                
-                <td>
-                    <a href="{% url 'confirmar_solicitacao' solicitacao.id %}" class="btn btn-success btn-sm">Aprovar</a>
-                    <a href="{% url 'rejeitar_solicitacao' solicitacao.id %}" class="btn btn-danger btn-sm">Rejeitar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            {% if solicitacoes %}
+                <table class="table-nb">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Título</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for solicitacao in solicitacoes %}
+                        <tr>
+                            <td class="font-bold">{{ solicitacao.usuario.username }}</td>
+                            <td class="font-bold">{{ solicitacao.titulo }}</td>
+                            <td>
+                                {% if solicitacao.status == "aprovado" %}
+                                    <span class="badge-nb badge-approved">Aprovado</span>
+                                {% elif solicitacao.status == "rejeitado" %}
+                                    <span class="badge-nb badge-rejected">Recusado</span>
+                                {% else %}
+                                    <span class="badge-nb badge-pending">Pendente</span>
+                                {% endif %}
+                            </td>
+                            <td class="font-mono">{{ solicitacao.data_solicitacao }}</td>
+                            <td>
+                                <div class="flex gap-2">
+                                    <a href="{% url 'confirmar_solicitacao' solicitacao.id %}" class="btn-nb flex-1 text-center bg-green-200 text-green-900 text-sm py-1" onclick="return confirm('Aprovar esta solicitação?')">
+                                        <i class="fas fa-check"></i> Aprovar
+                                    </a>
+                                    <a href="{% url 'rejeitar_solicitacao' solicitacao.id %}" class="btn-nb flex-1 text-center bg-red-200 text-red-900 text-sm py-1" onclick="return confirm('Rejeitar esta solicitação?')">
+                                        <i class="fas fa-times"></i> Rejeitar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state py-12">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <h3 class="text-3xl font-black uppercase">Nenhuma solicitação</h3>
+                    <p class="text-lg font-bold">Não há solicitações pendentes no momento</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}

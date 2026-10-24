@@ -1,0 +1,48 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block titulo %}
+<title>Editar Obra - Otaku Estudante</title>
+{% endblock %}
+
+{% block conteudo %}
+    <section class="content-nb container-nb py-8">
+        <div class="max-w-lg mx-auto">
+            <div class="mb-6">
+                <h1 class="text-3xl font-black uppercase mb-1">Editar Obra</h1>
+                <p class="text-lg font-bold">{{ obra.titulo }}</p>
+            </div>
+
+            <div class="card-nb p-8 shadow-nb">
+                <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div class="form-group-nb">
+                        <label for="titulo">Título da Obra</label>
+                        {{ form.titulo }}
+                    </div>
+
+                    <div class="form-group-nb">
+                        <label class="block mb-2">Capa da Obra</label>
+                        {% if obra.capa %}
+                            <div class="mb-4">
+                                <img src="{{ obra.capa.url }}" alt="Capa atual" class="w-32 h-40 object-cover border-black border-3 shadow-nb">
+                            </div>
+                        {% endif %}
+                        <input type="file" name="capa" accept="image/*" class="input-nb w-full">
+                        <p class="text-xs font-bold text-gray-600 mt-1">Deixe em branco para manter a capa atual</p>
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full py-3 font-black">
+                        <i class="fas fa-save mr-2"></i>Salvar Alterações
+                    </button>
+                </form>
+                <div class="mt-4 text-center">
+                    <a href="{% url 'listar_obras' %}" class="btn-nb bg-yellow-200 text-yellow-900">
+                        <i class="fas fa-times mr-2"></i>Cancelar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

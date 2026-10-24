@@ -1,274 +1,815 @@
-/* 
- * Custom CSS for Otaku Estudante
- * Complementa o Tailwind CSS com estilos personalizados
- */
+/* =========================================
+   Otaku Estudante - Neobrutalist Design System
+   Mix: Neobrutalismo (neobrutalism.dev) + beachRead (Dribbble)
+   ========================================= */
 
-/* Smooth scrolling */
+/* --- Design Tokens (Variáveis CSS) --- */
+:root {
+  /* Cores Neobrutalistas - Alto Contraste */
+  --nb-black: #000000;
+  --nb-white: #ffffff;
+  --nb-offwhite: #fdfdfd;
+  --nb-cream: #fffef0;
+  --nb-pink: #ff00ff;
+  --nb-pink-dark: #cc00cc;
+  --nb-cyan: #00ffff;
+  --nb-cyan-dark: #00cccc;
+  --nb-yellow: #ffff00;
+  --nb-yellow-dark: #cccc00;
+  --nb-red: #ff0000;
+  --nb-red-dark: #cc0000;
+  --nb-green: #00ff00;
+  --nb-green-dark: #00cc00;
+  --nb-purple: #bf00ff;
+  --nb-purple-dark: #9900cc;
+
+  /* Semânticas do projeto */
+  --color-bg: var(--nb-cream);
+  --color-surface: var(--nb-white);
+  --color-text: var(--nb-black);
+  --color-primary: var(--nb-pink);
+  --color-primary-dark: var(--nb-pink-dark);
+  --color-secondary: var(--nb-cyan);
+  --color-accent: var(--nb-yellow);
+  --color-danger: var(--nb-red);
+  --color-success: var(--nb-green);
+  --color-warning: var(--nb-yellow);
+
+  /* Espaçamento */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  /* Bordas Neobrutalistas */
+  --nb-border: 3px solid var(--nb-black);
+  --nb-border-radius: 0px; /* Bordas duras, quase retas */
+  --nb-radius-sm: 2px;
+  --nb-radius-md: 4px;
+
+  /* Sombra Neobrutalista (dura, offset grande, sem blur suave) */
+  --nb-shadow: 4px 4px 0px var(--nb-black);
+  --nb-shadow-hover: 2px 2px 0px var(--nb-black);
+  --nb-shadow-active: 0px 0px 0px var(--nb-black);
+
+  /* Tipografia */
+  --font-display: 'Courier Prime', 'Oswald', 'Impact', 'Charcoal', sans-serif;
+  --font-body: 'Poppins', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Courier Prime', monospace;
+
+  /* Transições */
+  --transition-fast: 0.1s ease;
+  --transition-normal: 0.2s ease;
+}
+
+/* --- Reset Base --- */
+* {
+  box-sizing: border-box;
+}
+
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
-/* Remove default input[type="search"] styling */
-input[type="search"]::-webkit-search-cancel-button {
-    -webkit-appearance: none;
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Skeleton loading effect */
-@keyframes skeleton-loading {
-    0% {
-        background-color: #e0e0e0;
-    }
-    100% {
-        background-color: #f0f0f0;
-    }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin: 0 0 1rem 0;
+  line-height: 1.1;
 }
 
-.skeleton {
-    animation: skeleton-loading 1s infinite alternate;
-    border-radius: 4px;
+h1 { font-size: clamp(2rem, 5vw, 4rem); }
+h2 { font-size: clamp(1.75rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+h4 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); }
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: var(--transition-fast);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+button, input, select, textarea {
+  font-family: var(--font-body);
+  font-size: 1rem;
 }
 
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
+/* --- Neobrutalist Components --- */
+
+/* Botão Neobrutalista */
+.btn-nb, .btn-primary, .btn-secondary, button, input[type="submit"] {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1.75rem;
+  font-size: 1rem;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: var(--nb-shadow);
+  transition: var(--transition-fast);
+  text-align: center;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
+.btn-nb:hover, .btn-primary:hover, .btn-secondary:hover, button:hover, input[type="submit"]:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-hover);
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
+.btn-nb:active, .btn-primary:active, .btn-secondary:active, button:active, input[type="submit"]:active {
+  transform: translate(4px, 4px);
+  box-shadow: var(--nb-shadow-active);
 }
 
-/* Custom focus styles for accessibility */
-*:focus-visible {
-    outline: 2px solid #8B5CF6;
-    outline-offset: 2px;
+/* Botão Primário (magenta vibrante) */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--nb-white);
+  border-color: var(--nb-black);
 }
 
-/* Smooth transitions for all interactive elements */
-button, a, input, select, textarea {
-    transition: all 0.3s ease-in-out;
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-hover);
 }
 
-/* Enhanced form inputs */
-.input-field::placeholder {
-    color: #b0b0b0;
+.btn-primary:active {
+  transform: translate(4px, 4px);
+  box-shadow: var(--nb-shadow-active);
 }
 
-.input-field:hover {
-    border-color: #c0c0c0;
+/* Input Neobrutalista */
+.input-nb, input, select, textarea {
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--nb-shadow);
+  transition: var(--transition-fast);
+  width: 100%;
 }
 
-.input-field:focus {
-    border-color: #8B5CF6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+.input-nb:focus, input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 4px 4px 0px var(--color-primary), 0 0 0 1px var(--nb-black);
+  transform: translate(-1px, -1px);
 }
 
-/* Card hover effect */
-.card {
-    position: relative;
-    overflow: hidden;
+/* Card Neobrutalista */
+.card-nb, .card {
+  background-color: var(--color-surface);
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  box-shadow: var(--nb-shadow);
+  transition: var(--transition-fast);
+  overflow: hidden;
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s ease-in-out;
+.card-nb:hover, .card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--nb-shadow-hover);
 }
 
-.card:hover::before {
-    left: 100%;
+.card-nb:active, .card:active {
+  transform: translate(4px, 4px);
+  box-shadow: var(--nb-shadow-active);
 }
 
-/* Button enhanced styles */
-.btn-primary, .btn-secondary {
-    position: relative;
-    overflow: hidden;
+/* Badge / Status Neobrutalista */
+.badge-nb, .badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.85rem;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-sm);
+  box-shadow: var(--nb-shadow);
+  letter-spacing: 0.05em;
 }
 
-.btn-primary::before,
-.btn-secondary::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+.badge-pending { background-color: var(--color-warning); color: var(--nb-black); border-color: var(--nb-black); }
+.badge-approved { background-color: var(--color-success); color: var(--nb-black); border-color: var(--nb-black); }
+.badge-rejected { background-color: var(--color-danger); color: var(--nb-white); border-color: var(--nb-black); }
+
+/* Link Neobrutalista */
+.link-nb, a {
+  position: relative;
+  text-decoration: none;
+  font-weight: 700;
 }
 
-.btn-primary:active::before,
-.btn-secondary:active::before {
-    width: 300px;
-    height: 300px;
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: var(--color-primary);
+  transition: var(--transition-fast);
 }
 
-/* Badge styles */
-.badge-status {
-    @apply inline-block px-3 py-1 rounded-full text-xs font-semibold;
+a:hover::after {
+  width: 100%;
 }
 
-.badge-pending {
-    @apply badge-status bg-yellow-100 text-yellow-800;
+/* --- Layout Estrutural --- */
+
+.container-nb, .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
 }
 
-.badge-approved {
-    @apply badge-status bg-green-100 text-green-800;
+.main-nb {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.badge-rejected {
-    @apply badge-status bg-red-100 text-red-800;
+.content-nb {
+  flex: 1;
+  padding-bottom: var(--space-xl);
 }
 
-/* Toast notification styling */
-.toast {
-    animation: slideIn 0.3s ease-in-out;
+/* --- Navbar Neobrutalista --- */
+.navbar-nb {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--color-surface);
+  border-bottom: var(--nb-border);
+  box-shadow: var(--nb-shadow);
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.navbar-nb .nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Dropdown menu smooth animation */
-.group-hover\:opacity-100 {
-    transition: opacity 0.2s ease-in-out;
+.navbar-nb .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: var(--color-text);
 }
 
-/* Image hover zoom effect */
-img {
-    transition: transform 0.3s ease-in-out;
+.navbar-nb .logo img {
+  height: 40px;
+  width: 40px;
+  border: var(--nb-border);
+  box-shadow: var(--nb-shadow);
 }
 
-.group:hover img {
-    transform: scale(1.05);
+.navbar-nb .nav-links {
+  display: flex;
+  gap: 0;
+  align-items: center;
 }
 
-/* Loading spinner */
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.navbar-nb .nav-links a {
+  padding: 0.75rem 1.25rem;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  box-shadow: var(--nb-shadow);
+  margin-left: -3px; /* Overlap borders */
+  transition: var(--transition-fast);
 }
 
-.animate-spin {
-    animation: spin 1s linear infinite;
+.navbar-nb .nav-links a:first-child {
+  margin-left: 0;
 }
 
-/* Accessibility: high contrast mode */
-@media (prefers-contrast: more) {
-    :root {
-        --primary-color: #6B21A8;
-        --secondary-color: #C2185B;
-    }
-    
-    body {
-        letter-spacing: 0.05em;
-    }
+.navbar-nb .nav-links a:hover {
+  background-color: var(--color-primary);
+  color: var(--nb-white);
+  transform: translate(1px, 1px);
+  box-shadow: var(--nb-shadow-hover);
 }
 
-/* Accessibility: reduced motion */
+.navbar-nb .nav-links a:active {
+  transform: translate(3px, 3px);
+  box-shadow: var(--nb-shadow-active);
+}
+
+/* Mobile menu button */
+.navbar-nb .menu-toggle {
+  display: none;
+  border: var(--nb-border);
+  background: var(--color-surface);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.25rem;
+  box-shadow: var(--nb-shadow);
+  cursor: pointer;
+}
+
+.navbar-nb .menu-toggle:hover {
+  background-color: var(--color-primary);
+  color: var(--nb-white);
+}
+
+/* --- Hero Section Neobrutalista --- */
+.hero-nb {
+  background-color: var(--color-surface);
+  border-bottom: var(--nb-border);
+  padding: var(--space-xl) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-nb::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-primary) 4px,
+    var(--color-secondary) 4px,
+    var(--color-secondary) 8px
+  );
+}
+
+.hero-nb .hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+  text-align: center;
+}
+
+.hero-nb h1 {
+  margin-bottom: 1rem;
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+}
+
+.hero-nb p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* --- Obra Card (beachRead style + neobrutalismo) --- */
+.obra-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: var(--space-lg) 0;
+}
+
+.obra-card {
+  background-color: var(--color-surface);
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  box-shadow: var(--nb-shadow);
+  transition: var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.obra-card:hover {
+  transform: translate(3px, 3px);
+  box-shadow: var(--nb-shadow-hover);
+  border-color: var(--color-primary);
+}
+
+.obra-card:active {
+  transform: translate(5px, 5px);
+  box-shadow: var(--nb-shadow-active);
+}
+
+.obra-card-image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 2/3;
+  background-color: #ddd;
+}
+
+.obra-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-normal);
+}
+
+.obra-card:hover .obra-card-image img {
+  transform: scale(1.05);
+}
+
+.obra-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--transition-fast);
+  border: var(--nb-border);
+}
+
+.obra-card:hover .obra-card-overlay {
+  opacity: 1;
+}
+
+.obra-card-overlay .btn-nb {
+  font-size: 0.85rem;
+  padding: 0.6rem 1.2rem;
+  background-color: var(--color-primary);
+  color: var(--nb-white);
+  border-color: var(--nb-black);
+  box-shadow: var(--nb-shadow);
+}
+
+.obra-card-content {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.obra-card-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem 0;
+  color: var(--color-text);
+}
+
+.obra-card-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* --- Detalhes da Obra --- */
+.obra-detalhes-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.obra-detalhes-image {
+  border: var(--nb-border);
+  box-shadow: var(--nb-shadow);
+  border-radius: var(--nb-radius-md);
+  overflow: hidden;
+  aspect-ratio: 2/3;
+  background-color: #ddd;
+}
+
+.obra-detalhes-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.obra-detalhes-info h1 {
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.05);
+}
+
+.opiniao-box {
+  background-color: var(--color-surface);
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  box-shadow: var(--nb-shadow);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.opiniao-box:hover {
+  transform: translate(1px, 1px);
+  box-shadow: var(--nb-shadow-hover);
+}
+
+.opiniao-usuario {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.opiniao-texto {
+  margin: 0 0 0.5rem 0;
+}
+
+.opiniao-data {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* --- Formulários Neobrutalistas --- */
+.form-nb {
+  background-color: var(--color-surface);
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  box-shadow: var(--nb-shadow);
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-nb h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+}
+
+.form-group-nb {
+  margin-bottom: 1.5rem;
+}
+
+.form-group-nb label {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+/* --- Tabelas Neobrutalistas --- */
+.table-nb {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  overflow: hidden;
+  box-shadow: var(--nb-shadow);
+  background-color: var(--color-surface);
+}
+
+.table-nb th, .table-nb td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.table-nb th {
+  background-color: #f0f0f0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  border-bottom: var(--nb-border);
+}
+
+.table-nb tr:last-child td {
+  border-bottom: none;
+}
+
+.table-nb tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* --- Footer Neobrutalista --- */
+.footer-nb {
+  background-color: var(--color-surface);
+  border-top: var(--nb-border);
+  box-shadow: -4px -4px 0px var(--nb-black);
+  padding: var(--space-xl) 0;
+  margin-top: auto;
+}
+
+.footer-nb .footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.footer-nb h3 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-nb ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-nb ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-nb ul li a {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+/* --- Alerts / Messages Neobrutalistas --- */
+.alert-nb {
+  padding: 1rem 1.5rem;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  box-shadow: var(--nb-shadow);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  background-color: var(--color-surface);
+}
+
+.alert-success { background-color: var(--color-success); color: var(--nb-black); border-color: var(--nb-black); }
+.alert-error { background-color: var(--color-danger); color: var(--nb-white); border-color: var(--nb-black); }
+.alert-info { background-color: var(--color-secondary); color: var(--nb-black); border-color: var(--nb-black); }
+.alert-warning { background-color: var(--color-warning); color: var(--nb-black); border-color: var(--nb-black); }
+
+/* --- Empty State --- */
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.empty-state-icon {
+  font-size: 6rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+/* --- Pagination Neobrutalista --- */
+.pagination-nb {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.pagination-nb a, .pagination-nb span {
+  padding: 0.75rem 1.25rem;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-weight: 800;
+  box-shadow: var(--nb-shadow);
+  transition: var(--transition-fast);
+}
+
+.pagination-nb a:hover {
+  background-color: var(--color-primary);
+  color: var(--nb-white);
+  transform: translate(1px, 1px);
+  box-shadow: var(--nb-shadow-hover);
+}
+
+.pagination-nb .active {
+  background-color: var(--color-primary);
+  color: var(--nb-white);
+  box-shadow: var(--nb-shadow);
+}
+
+/* --- Toast Notification --- */
+.toast-nb {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  border: var(--nb-border);
+  border-radius: var(--nb-radius-md);
+  box-shadow: var(--nb-shadow);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+  z-index: 1000;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+
+.toast-nb.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* --- Accessibility: Reduced Motion --- */
 @media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary-color: #a78bfa;
-        --secondary-color: #f472b6;
-    }
+/* --- Mobile Responsivo --- */
+@media (max-width: 768px) {
+  .navbar-nb .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--color-surface);
+    border: var(--nb-border);
+    border-top: none;
+    box-shadow: var(--nb-shadow);
+    padding: 1rem;
+  }
+
+  .navbar-nb .nav-links.open {
+    display: flex;
+  }
+
+  .navbar-nb .nav-links a {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid #333;
+    box-shadow: none;
+  }
+
+  .navbar-nb .menu-toggle {
+    display: block;
+  }
+
+  .obra-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .obra-detalhes-header {
+    grid-template-columns: 1fr;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
 }
 
-/* Print styles */
-@media print {
-    nav, footer, .btn-primary, .btn-secondary {
-        display: none !important;
-    }
-    
-    body {
-        background: white;
-        color: black;
-    }
-}
-
-/* Responsive typography */
-@media (max-width: 640px) {
-    h1 {
-        @apply text-3xl;
-    }
-    
-    h2 {
-        @apply text-2xl;
-    }
-    
-    h3 {
-        @apply text-xl;
-    }
-}
-
-/* Custom form validation styles */
-.is-invalid {
-    border-color: #dc2626 !important;
-}
-
-.is-valid {
-    border-color: #16a34a !important;
-}
-
-.invalid-feedback {
-    @apply text-red-600 text-sm mt-1;
-}
-
-.valid-feedback {
-    @apply text-green-600 text-sm mt-1;
-}
-
-/* Utility classes */
-.line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+@media (max-width: 480px) {
+  .obra-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-nb {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
 }

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     {% block titulo %}
     <title>Otaku Estudante</title>
     {% endblock %}
@@ -14,270 +14,123 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
+
+    <!-- Custom Neobrutalist CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
     <style>
-        /* Tema customizado */
         :root {
-            --primary-color: #8B5CF6;
-            --secondary-color: #EC4899;
-            --accent-color: #06B6D4;
-        }
-
-        html {
-            scroll-behavior: smooth;
+            --primary-color: #ff00ff;
+            --secondary-color: #00ffff;
+            --accent-color: #ffff00;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            background-color: #f9fafb;
-        }
-
-        .btn-primary {
-            padding: 0.5rem 1rem;
-            background-color: #7c3aed;
-            color: white;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease-in-out;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary:hover {
-            background-color: #6d28d9;
-        }
-
-        .btn-secondary {
-            padding: 0.5rem 1rem;
-            background-color: #e5e7eb;
-            color: #111827;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease-in-out;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-secondary:hover {
-            background-color: #d1d5db;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 0.5rem 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #8B5CF6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease-in-out;
-        }
-
-        .card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .badge-status {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-approved {
-            background-color: #dcfce7;
-            color: #15803d;
-        }
-
-        .badge-rejected {
-            background-color: #fee2e2;
-            color: #991b1b;
+            font-family: 'Poppins', 'Courier Prime', sans-serif;
+            background-color: #fffef0;
         }
     </style>
 </head>
-<body>
-    <!-- Navigation Bar -->
-    <nav class="sticky top-0 z-50 bg-white shadow-md" x-data="{ open: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0">
-                    <a href="{% url 'inicio' %}" class="flex items-center space-x-2">
-                        <img src="{% static 'img/logo.png' %}" alt="Logo" class="h-10 w-10">
-                        <span class="text-xl font-bold text-purple-600">Otaku Estudante</span>
-                    </a>
-                </div>
+<body class="min-h-screen flex flex-col">
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-1">
-                    <a href="{% url 'inicio' %}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50 transition">
-                        <i class="fas fa-home mr-2"></i>Início
-                    </a>
-                    <a href="{% url 'todas_as_obras' %}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50 transition">
-                        <i class="fas fa-book mr-2"></i>Obras
-                    </a>
-
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'minhas_solicitacoes' %}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50 transition">
-                            <i class="fas fa-tasks mr-2"></i>Minhas Solicitações
-                        </a>
-                        <a href="{% url 'solicitar_obra' %}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50 transition">
-                            <i class="fas fa-plus-circle mr-2"></i>Solicitar Obra
-                        </a>
-
-                        {% if user.is_superuser %}
-                            <div class="relative group">
-                                <button class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-purple-600 hover:bg-gray-50 transition">
-                                    <i class="fas fa-cog mr-2"></i>Admin
-                                </button>
-                                <div class="absolute left-0 mt-0 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                                    <a href="{% url 'cadastrar_obra' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
-                                        <i class="fas fa-upload mr-2"></i>Cadastrar Obra
-                                    </a>
-                                    <a href="{% url 'listar_obras' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
-                                        <i class="fas fa-list mr-2"></i>Gerenciar Obras
-                                    </a>
-                                    <a href="{% url 'gerenciar_solicitacoes' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">
-                                        <i class="fas fa-edit mr-2"></i>Gerenciar Solicitações
-                                    </a>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                </div>
-
-                <!-- Auth Buttons / Profile -->
-                <div class="hidden md:flex items-center space-x-3">
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'profile' %}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition">
-                            {% if user.profile.photo %}
-                                <img src="{{ user.profile.photo.url }}" alt="{{ user.username }}" class="w-8 h-8 rounded-full object-cover">
-                            {% else %}
-                                <i class="fas fa-user-circle text-2xl text-gray-400"></i>
-                            {% endif %}
-                            <span class="text-sm font-medium text-gray-700">{{ user.username }}</span>
-                        </a>
-                        <form action="{% url 'logout' %}" method="post" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-secondary text-sm">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Sair
-                            </button>
-                        </form>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn-secondary text-sm">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Login
-                        </a>
-                        <a href="{% url 'register' %}" class="btn-primary text-sm">
-                            <i class="fas fa-user-plus mr-2"></i>Cadastrar
-                        </a>
-                    {% endif %}
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100">
-                        <i class="fas" :class="open ? 'fa-times' : 'fa-bars'"></i>
-                    </button>
-                </div>
+    <!-- Navbar Neobrutalista -->
+    <nav class="navbar-nb sticky top-0 z-50">
+        <div class="nav-container">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="{% static 'img/logo.png' %}" alt="Logo">
+                <span>Otaku Estudante</span>
             </div>
-        </div>
 
-        <!-- Mobile Menu -->
-        <div x-show="open" class="md:hidden bg-white border-t border-gray-200">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="{% url 'inicio' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-home mr-2"></i>Início
-                </a>
-                <a href="{% url 'todas_as_obras' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                    <i class="fas fa-book mr-2"></i>Obras
-                </a>
+            <!-- Desktop Menu -->
+            <div class="nav-links hidden md:flex">
+                <a href="{% url 'inicio' %}" class="active">Início</a>
+                <a href="{% url 'todas_as_obras' %}">Obras</a>
 
                 {% if user.is_authenticated %}
-                    <a href="{% url 'minhas_solicitacoes' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                        <i class="fas fa-tasks mr-2"></i>Minhas Solicitações
-                    </a>
-                    <a href="{% url 'solicitar_obra' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                        <i class="fas fa-plus-circle mr-2"></i>Solicitar Obra
-                    </a>
+                    <a href="{% url 'minhas_solicitacoes' %}">Minhas Solicitações</a>
+                    <a href="{% url 'solicitar_obra' %}">Solicitar Obra</a>
 
                     {% if user.is_superuser %}
-                        <a href="{% url 'cadastrar_obra' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                            <i class="fas fa-upload mr-2"></i>Cadastrar Obra
-                        </a>
-                        <a href="{% url 'listar_obras' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                            <i class="fas fa-list mr-2"></i>Gerenciar Obras
-                        </a>
-                        <a href="{% url 'gerenciar_solicitacoes' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                            <i class="fas fa-edit mr-2"></i>Gerenciar Solicitações
-                        </a>
+                        <a href="{% url 'cadastrar_obra' %}">Cadastrar Obra</a>
+                        <a href="{% url 'listar_obras' %}">Gerenciar Obras</a>
+                        <a href="{% url 'gerenciar_solicitacoes' %}">Gerenciar Solicitações</a>
                     {% endif %}
                 {% endif %}
+            </div>
 
-                <hr class="my-2">
-
+            <!-- Auth / Profile -->
+            <div class="nav-links hidden md:flex" style="gap: -3px;">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                        <i class="fas fa-user mr-2"></i>Perfil
+                    <a href="{% url 'profile' %}" class="bg-yellow-200">
+                        <i class="fas fa-user mr-1"></i>{{ user.username }}
                     </a>
-                    <form action="{% url 'logout' %}" method="post">
+                    <form action="{% url 'logout' %}" method="post" class="inline">
                         {% csrf_token %}
-                        <button type="submit" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                            <i class="fas fa-sign-out-alt mr-2"></i>Sair
+                        <button type="submit" class="btn-nb bg-red-200 text-red-900" style="padding: 0.6rem 1rem; font-size: 0.85rem;">
+                            <i class="fas fa-sign-out-alt mr-1"></i>Sair
                         </button>
                     </form>
                 {% else %}
-                    <a href="{% url 'login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-purple-600 hover:bg-gray-50">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    <a href="{% url 'login' %}" class="btn-nb">Login</a>
+                    <a href="{% url 'register' %}" class="btn-primary" style="padding: 0.6rem 1rem; font-size: 0.85rem;">
+                        <i class="fas fa-user-plus mr-1"></i>Cadastrar
                     </a>
-                    <a href="{% url 'register' %}" class="block px-3 py-2 rounded-md text-base font-medium text-purple-600 hover:bg-gray-50">
-                        <i class="fas fa-user-plus mr-2"></i>Cadastrar
-                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Mobile menu toggle -->
+            <button class="menu-toggle md:hidden" @click="open = !open" aria-label="Abrir menu">
+                <i class="fas" :class="open ? 'fa-times' : 'fa-bars'"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="open" x-transition class="md:hidden border-t border-black">
+            <div class="p-4 space-y-2">
+                <a href="{% url 'inicio' %}" class="block py-3 border-b border-black">Início</a>
+                <a href="{% url 'todas_as_obras' %}" class="block py-3 border-b border-black">Obras</a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'minhas_solicitacoes' %}" class="block py-3 border-b border-black">Minhas Solicitações</a>
+                    <a href="{% url 'solicitar_obra' %}" class="block py-3 border-b border-black">Solicitar Obra</a>
+
+                    {% if user.is_superuser %}
+                        <a href="{% url 'cadastrar_obra' %}" class="block py-3 border-b border-black">Cadastrar Obra</a>
+                        <a href="{% url 'listar_obras' %}" class="block py-3 border-b border-black">Gerenciar Obras</a>
+                        <a href="{% url 'gerenciar_solicitacoes' %}" class="block py-3 border-b border-black">Gerenciar Solicitações</a>
+                    {% endif %}
+                {% endif %}
+
+                <hr class="border-black">
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="block py-3 border-b border-black">Perfil</a>
+                    <form action="{% url 'logout' %}" method="post" class="border-b border-black">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full text-left py-3 border-b border-black">Sair</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="block py-3 border-b border-black bg-yellow-200">Login</a>
+                    <a href="{% url 'register' %}" class="block py-3 border-b border-black bg-pink-200">Cadastrar</a>
                 {% endif %}
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="min-h-screen">
+    <main class="main-nb flex-1">
         {% if messages %}
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="container-nb my-4">
                 {% for message in messages %}
-                    <div class="p-4 mb-4 rounded-lg {% if message.tags %}bg-{{ message.tags }}-100 text-{{ message.tags }}-800{% else %}bg-blue-100 text-blue-800{% endif %}" role="alert">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i class="fas fa-check-circle mr-3"></i>
-                                {{ message }}
-                            </div>
-                            <button onclick="this.parentElement.parentElement.remove()" class="text-xl font-bold">&times;</button>
-                        </div>
+                    <div class="alert-nb alert-{{ message.tags }}" role="alert">
+                        {{ message }}
                     </div>
                 {% endfor %}
             </div>
@@ -286,26 +139,24 @@
         {% block conteudo %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300 py-8 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-white font-bold mb-4">Otaku Estudante</h3>
-                    <p class="text-sm">Sua plataforma para descobrir e compartilhar obras incríveis.</p>
-                </div>
-                <div>
-                    <h3 class="text-white font-bold mb-4">Links Rápidos</h3>
-                    <ul class="text-sm space-y-2">
-                        <li><a href="{% url 'inicio' %}" class="hover:text-purple-400 transition">Início</a></li>
-                        <li><a href="{% url 'todas_as_obras' %}" class="hover:text-purple-400 transition">Obras</a></li>
-                        <li><a href="{% url 'solicitar_obra' %}" class="hover:text-purple-400 transition">Solicitar Obra</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-white font-bold mb-4">Contato</h3>
-                    <p class="text-sm">© 2024 Otaku Estudante. Todos os direitos reservados.</p>
-                </div>
+    <!-- Footer Neobrutalista -->
+    <footer class="footer-nb">
+        <div class="footer-content">
+            <div>
+                <h3>Otaku Estudante</h3>
+                <p class="font-weight-bold">Sua plataforma para descobrir e compartilhar obras incríveis.</p>
+            </div>
+            <div>
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="{% url 'inicio' %}">Início</a></li>
+                    <li><a href="{% url 'todas_as_obras' %}">Obras</a></li>
+                    <li><a href="{% url 'solicitar_obra' %}">Solicitar Obra</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3>Contato</h3>
+                <p class="font-weight-bold">© 2024 Otaku Estudante. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>

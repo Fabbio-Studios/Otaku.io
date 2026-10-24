@@ -6,111 +6,99 @@
 {% endblock %}
 
 {% block conteudo %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="w-full max-w-md">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <img src="{% static 'img/logo.png' %}" alt="Logo" class="h-16 w-16 mx-auto mb-4">
-            <h1 class="text-3xl font-bold text-gray-900">Otaku Estudante</h1>
-            <p class="text-gray-600 mt-2">Faça login para continuar</p>
-        </div>
+    <section class="content-nb container-nb py-8">
+        <div class="max-w-md mx-auto">
+            <!-- Logo -->
+            <div class="text-center mb-8">
+                <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-20 h-20 border-black border-3 mx-auto mb-4 shadow-nb">
+                <h1 class="text-4xl font-black uppercase mb-1">Otaku Estudante</h1>
+                <p class="text-xl font-bold">Faça login para continuar</p>
+            </div>
 
-        <!-- Login Card -->
-        <div class="card p-8">
-            <form method="post" class="space-y-6">
-                {% csrf_token %}
+            <!-- Login Card -->
+            <div class="card-nb p-8 shadow-nb">
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
 
-                <!-- Username Field -->
-                <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
-                        Nome de Usuário
-                    </label>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        name="username"
-                        class="input-field"
-                        placeholder="seu_usuario"
-                        required
-                    >
-                    {% if form.username.errors %}
-                        <div class="mt-2 flex items-center text-red-600 text-sm">
-                            <i class="fas fa-exclamation-circle mr-2"></i>
-                            {{ form.username.errors.0 }}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Password Field -->
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Senha
-                    </label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password"
-                        class="input-field"
-                        placeholder="••••••••"
-                        required
-                    >
-                    {% if form.password.errors %}
-                        <div class="mt-2 flex items-center text-red-600 text-sm">
-                            <i class="fas fa-exclamation-circle mr-2"></i>
-                            {{ form.password.errors.0 }}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Non-field Errors -->
-                {% if form.non_field_errors %}
-                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start">
-                        <i class="fas fa-alert-circle mr-3 mt-0.5 flex-shrink-0"></i>
-                        <div>
-                            {% for error in form.non_field_errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
+                    <!-- Username Field -->
+                    <div class="form-group-nb">
+                        <label for="username">Nome de Usuário</label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username"
+                            class="input-nb w-full"
+                            placeholder="seu_usuario"
+                            required
+                        >
+                        {% if form.username.errors %}
+                            <div class="mt-2 flex items-center text-red-600 font-bold">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ form.username.errors.0 }}
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
 
-                <!-- Submit Button -->
-                <button 
-                    type="submit" 
-                    class="w-full btn-primary py-3 font-semibold"
-                >
-                    <i class="fas fa-sign-in-alt mr-2"></i>Fazer Login
-                </button>
-            </form>
+                    <!-- Password Field -->
+                    <div class="form-group-nb">
+                        <label for="password">Senha</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password"
+                            class="input-nb w-full"
+                            placeholder="••••••••"
+                            required
+                        >
+                        {% if form.password.errors %}
+                            <div class="mt-2 flex items-center text-red-600 font-bold">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ form.password.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
 
-            <!-- Divider -->
-            <div class="relative mt-8">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
+                    <!-- Non-field Errors -->
+                    {% if form.non_field_errors %}
+                        <div class="bg-red-200 border-black border-3 p-4 shadow-nb flex items-start">
+                            <i class="fas fa-alert-circle mr-3 mt-0.5 text-red-900 flex-shrink-0"></i>
+                            <div class="font-bold">
+                                {% for error in form.non_field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="btn-primary w-full py-3 text-lg font-black"
+                    >
+                        <i class="fas fa-sign-in-alt mr-2"></i>Fazer Login
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative mt-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-black"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm font-bold">
+                        <span class="px-2 bg-cream">Ou</span>
+                    </div>
                 </div>
-                <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">Ou</span>
+
+                <!-- Register Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-lg font-bold">
+                        Não tem uma conta? 
+                        <a href="{% url 'register' %}" class="text-pink-600 font-black underline">
+                            Cadastre-se agora
+                        </a>
+                    </p>
                 </div>
             </div>
-
-            <!-- Register Link -->
-            <div class="mt-6 text-center">
-                <p class="text-gray-700">
-                    Não tem uma conta? 
-                    <a href="{% url 'register' %}" class="text-purple-600 hover:text-purple-700 font-semibold">
-                        Cadastre-se agora
-                    </a>
-                </p>
-            </div>
         </div>
-
-        <!-- Help Text -->
-        <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p class="text-sm text-blue-700 flex items-start">
-                <i class="fas fa-info-circle mr-3 mt-0.5 flex-shrink-0"></i>
-                <span>Use suas credenciais de login para acessar sua conta</span>
-            </p>
-        </div>
-    </div>
-</div>
+    </section>
 {% endblock %}

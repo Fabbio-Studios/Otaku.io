@@ -6,161 +6,136 @@
 {% endblock %}
 
 {% block conteudo %}
-    <section class="py-12 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
-            <div class="mb-12">
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">Todas as Obras</h1>
-                <p class="text-gray-600">Explore nosso catálogo completo de obras</p>
-            </div>
+    <section class="content-nb container-nb py-10">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-5xl md:text-6xl font-black mb-2 uppercase">Todas as Obras</h1>
+            <p class="text-xl font-bold">Explore nosso catálogo completo de obras</p>
+        </div>
 
-            <!-- Filter/Search Bar (opcional) -->
-            <div class="mb-8 flex flex-col sm:flex-row gap-4">
-                <div class="flex-1">
-                    <input 
-                        type="text" 
-                        placeholder="Buscar obras..." 
-                        class="input-field w-full"
-                        id="searchInput"
-                    >
-                </div>
-                <button class="btn-primary">
-                    <i class="fas fa-search mr-2"></i>Buscar
-                </button>
+        <!-- Search Bar -->
+        <div class="mb-8 flex flex-col sm:flex-row gap-4">
+            <div class="flex-1">
+                <input 
+                    type="text" 
+                    placeholder="Buscar obras..." 
+                    class="input-nb w-full"
+                    id="searchInput"
+                >
             </div>
+            <button class="btn-primary px-8 py-3 text-lg">
+                <i class="fas fa-search mr-2"></i>Buscar
+            </button>
+        </div>
 
-            <!-- Works Grid -->
-            {% if obras %}
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                    {% for obra in obras %}
-                        <div class="group cursor-pointer" x-data="{ hovered: false }" @mouseenter="hovered = true" @mouseleave="hovered = false">
-                            <div class="card p-0 overflow-hidden h-full flex flex-col">
-                                <div class="relative overflow-hidden bg-gray-200 aspect-video">
-                                    {% if obra.capa %}
-                                        <img 
-                                            src="{{ obra.capa.url }}" 
-                                            alt="{{ obra.titulo }}" 
-                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                        >
-                                    {% else %}
-                                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-400 to-indigo-600">
-                                            <i class="fas fa-image text-4xl text-white opacity-50"></i>
-                                        </div>
-                                    {% endif %}
-                                    
-                                    <!-- Overlay on Hover -->
-                                    <a 
-                                        href="{% url 'detalhes_obra' obra.titulo %}" 
-                                        class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-black bg-opacity-50 flex flex-col items-center justify-center transition-opacity duration-300 gap-3"
-                                    >
-                                        <i class="fas fa-play-circle text-white text-5xl"></i>
-                                        <span class="text-white font-semibold">Ver Detalhes</span>
-                                    </a>
+        <!-- Works Grid -->
+        {% if obras %}
+            <div class="obra-grid">
+                {% for obra in obras %}
+                    <div class="obra-card group">
+                        <div class="obra-card-image">
+                            {% if obra.capa %}
+                                <img 
+                                    src="{{ obra.capa.url }}" 
+                                    alt="{{ obra.titulo }}" 
+                                    class="w-full h-full object-cover"
+                                >
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                                    <i class="fas fa-image text-4xl text-gray-400"></i>
                                 </div>
-                                
-                                <div class="p-4 flex-grow flex flex-col">
-                                    <a 
-                                        href="{% url 'detalhes_obra' obra.titulo %}" 
-                                        class="font-semibold text-gray-900 hover:text-purple-600 line-clamp-2 transition"
-                                    >
-                                        {{ obra.titulo }}
-                                    </a>
-                                    
-                                    <div class="mt-auto pt-4 border-t border-gray-200">
-                                        <a 
-                                            href="{% url 'detalhes_obra' obra.titulo %}" 
-                                            class="text-purple-600 hover:text-purple-700 font-medium text-sm"
-                                        >
-                                            Mais informações <i class="fas fa-chevron-right ml-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                            {% endif %}
+                            
+                            <!-- Overlay on Hover -->
+                            <a 
+                                href="{% url 'detalhes_obra' obra.titulo %}" 
+                                class="obra-card-overlay"
+                            >
+                                <span class="btn-nb text-sm px-4 py-2">
+                                    Ver Detalhes <i class="fas fa-chevron-right ml-1"></i>
+                                </span>
+                            </a>
+                        </div>
+                        
+                        <div class="obra-card-content">
+                            <h3 class="obra-card-title">{{ obra.titulo }}</h3>
+                            
+                            <div class="mt-auto pt-4 border-t border-black">
+                                <a 
+                                    href="{% url 'detalhes_obra' obra.titulo %}" 
+                                    class="font-black text-black hover:text-pink-600 transition-colors"
+                                >
+                                    Mais informações <i class="fas fa-chevron-right ml-1"></i>
+                                </a>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
-
-                <!-- Pagination -->
-                {% if obras.has_other_pages %}
-                    <nav aria-label="Paginação" class="flex justify-center items-center gap-2">
-                        {% if obras.has_previous %}
-                            <a 
-                                href="?page={{ obras.previous_page_number }}" 
-                                class="btn-secondary"
-                            >
-                                <i class="fas fa-chevron-left mr-2"></i>Anterior
-                            </a>
-                        {% else %}
-                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
-                                <i class="fas fa-chevron-left mr-2"></i>Anterior
-                            </span>
-                        {% endif %}
-
-                        <!-- Page Numbers -->
-                        <div class="flex gap-2 flex-wrap justify-center">
-                            {% for num in obras.paginator.page_range %}
-                                {% if num == obras.number %}
-                                    <span class="px-3 py-2 bg-purple-600 text-white rounded-lg font-semibold">
-                                        {{ num }}
-                                    </span>
-                                {% else %}
-                                    <a 
-                                        href="?page={{ num }}" 
-                                        class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                                    >
-                                        {{ num }}
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-
-                        {% if obras.has_next %}
-                            <a 
-                                href="?page={{ obras.next_page_number }}" 
-                                class="btn-secondary"
-                            >
-                                Próximo<i class="fas fa-chevron-right ml-2"></i>
-                            </a>
-                        {% else %}
-                            <span class="px-4 py-2 bg-gray-200 text-gray-400 rounded-lg cursor-not-allowed">
-                                Próximo<i class="fas fa-chevron-right ml-2"></i>
-                            </span>
-                        {% endif %}
-                    </nav>
-
-                    <!-- Pagination Info -->
-                    <div class="text-center mt-6 text-gray-600">
-                        <p>Página {{ obras.number }} de {{ obras.paginator.num_pages }}</p>
                     </div>
-                {% endif %}
-            {% else %}
-                <!-- Empty State -->
-                <div class="text-center py-16">
-                    <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Nenhuma obra encontrada</h3>
-                    <p class="text-gray-600 mb-6">Volte em breve para conferir novas adições ao nosso catálogo</p>
-                    <a href="{% url 'inicio' %}" class="btn-primary">
-                        <i class="fas fa-home mr-2"></i>Voltar ao Início
-                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if obras.has_other_pages %}
+                <nav aria-label="Paginação" class="pagination-nb mt-8">
+                    {% if obras.has_previous %}
+                        <a href="?page={{ obras.previous_page_number }}" class="btn-nb">
+                            <i class="fas fa-chevron-left mr-1"></i>Anterior
+                        </a>
+                    {% else %}
+                        <span class="btn-nb" style="background: #ccc; box-shadow: none;">Anterior</span>
+                    {% endif %}
+
+                    <!-- Page Numbers -->
+                    <div class="flex gap-1">
+                        {% for num in obras.paginator.page_range %}
+                            {% if num == obras.number %}
+                                <span class="btn-nb bg-pink-200 text-black">{{ num }}</span>
+                            {% else %}
+                                <a href="?page={{ num }}" class="btn-nb">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    {% if obras.has_next %}
+                        <a href="?page={{ obras.next_page_number }}" class="btn-nb">
+                            Próximo<i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                    {% else %}
+                        <span class="btn-nb" style="background: #ccc; box-shadow: none;">Próximo</span>
+                    {% endif %}
+                </nav>
+
+                <div class="text-center mt-6">
+                    <p class="font-bold">Página {{ obras.number }} de {{ obras.paginator.num_pages }}</p>
                 </div>
             {% endif %}
-        </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state py-16">
+                <div class="empty-state-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3 class="text-4xl font-black uppercase">Nenhuma obra encontrada</h3>
+                <p class="text-xl font-bold">Volte em breve para conferir novas adições ao nosso catálogo</p>
+                <a href="{% url 'inicio' %}" class="btn-primary text-lg px-8 py-3">
+                    <i class="fas fa-home mr-2"></i>Voltar ao Início
+                </a>
+            </div>
+        {% endif %}
     </section>
 
     <script>
         // Search functionality
         const searchInput = document.getElementById('searchInput');
-        const obras = document.querySelectorAll('[class*="group cursor-pointer"]');
+        const obrasCards = document.querySelectorAll('.obra-card');
         
         if (searchInput) {
             searchInput.addEventListener('input', function() {
                 const query = this.value.toLowerCase();
-                obras.forEach(obra => {
-                    const title = obra.querySelector('.font-semibold').textContent.toLowerCase();
-                    obra.style.display = title.includes(query) ? '' : 'none';
+                obrasCards.forEach(card => {
+                    const title = card.querySelector('.obra-card-title').textContent.toLowerCase();
+                    card.style.display = title.includes(query) ? '' : 'none';
                 });
             });
         }
     </script>
 {% endblock %}
-
