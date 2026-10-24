@@ -38,7 +38,7 @@ O arquivo `requirements.txt` contém:
 
 - asgiref==3.8.1
 - Django==5.1.3
-- django-widget-tweaks==1.8.0
+- django-widget-tweaks==1.5.1
 - pillow==11.0.0
 - PyQt5==5.15.10
 - PyQt5-Qt5==5.15.2
