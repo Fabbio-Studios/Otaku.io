@@ -116,3 +116,9 @@ O front-end do Otaku.io foi completamente redesenhado com tecnologias modernas, 
 ## Observação
 
 A virtual environment já foi criada no diretório `.venv`.
+
+## Hosts permitidos
+
+No Vercel, `VERCEL_URL` é usado automaticamente em `ALLOWED_HOSTS`. Para domínios
+personalizados ou hosts adicionais, configure `DJANGO_ALLOWED_HOSTS` como uma
+lista separada por vírgulas, por exemplo: `otaku.example.com,admin.example.com`.
