@@ -119,6 +119,7 @@ A virtual environment já foi criada no diretório `.venv`.
 
 ## Hosts permitidos
 
-No Vercel, `VERCEL_URL` é usado automaticamente em `ALLOWED_HOSTS`. Para domínios
-personalizados ou hosts adicionais, configure `DJANGO_ALLOWED_HOSTS` como uma
-lista separada por vírgulas, por exemplo: `otaku.example.com,admin.example.com`.
+No Vercel, o domínio de implantação atual e o valor de `VERCEL_URL` são usados
+em `ALLOWED_HOSTS`. Para domínios personalizados ou hosts adicionais, configure
+`DJANGO_ALLOWED_HOSTS` como uma lista separada por vírgulas, por exemplo:
+`otaku.example.com,admin.example.com`.

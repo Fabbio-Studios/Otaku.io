@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-)1wtabj4fclm1*h4%4*%96fmw%@^(l36du*fs5_sx$9@1cq*ap
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'otaku-io-7gj8-94cs1jgxe-fabbio-studios-projects.vercel.app',
+]
 ALLOWED_HOSTS.extend(
     host.strip()
     for host in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
