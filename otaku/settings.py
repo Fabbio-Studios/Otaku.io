@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'otaku-io-7gj8-94cs1jgxe-fabbio-studios-projects.vercel.app',
+    'https://otaku-estudante-io.vercel.app/',
 ]
 ALLOWED_HOSTS.extend(
     host.strip()
